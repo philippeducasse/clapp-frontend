@@ -1,7 +1,7 @@
 "use client";
 
 import { DarkModeToggle } from "@/components/ui/dark-mode-toggle";
-import Breadcrumbs from "./Breadcrumbs";
+import Breadcrumbs from "./breadcrumbs/Breadcrumbs";
 import { UserRound, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
