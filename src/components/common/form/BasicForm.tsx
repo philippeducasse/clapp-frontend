@@ -126,11 +126,11 @@ const BasicForm = ({
           )}
           <div className="flex justify-between mt-6 gap-4">
             {action === Action.LOGIN ? (
-              <Button variant={"outline"}>
+              <Button variant={"outline"} type="button">
                 <Link href="/register">Register</Link>
               </Button>
             ) : action === Action.REGISTER ? (
-              <Button variant={"outline"}>
+              <Button variant={"outline"} type="button">
                 <Link href="/login">Login</Link>
               </Button>
             ) : onCancelHref ? (
