@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Festival } from "@/interfaces/entities/Festival";
 import { PaginatedResponse } from "@/interfaces/table/PaginatedResponse";
 import { useFestivalColumns } from "../../helpers/useFestivalColumns";
@@ -20,10 +20,6 @@ export const FestivalsTable = ({ initialData }: FestivalsTableProps) => {
   const [festivalData, setFestivalData] = useState<PaginatedResponse<Festival>>(initialData);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deleteFestivalId, setDeleteFestivalId] = useState<number | null>(null);
-
-  useEffect(() => {
-    dispatch(setFestivals(festivalData.results));
-  }, [dispatch, festivalData.results]);
 
   const handleDeleteClick = useCallback((id: number) => {
     setDeleteFestivalId(id);

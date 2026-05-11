@@ -2,14 +2,18 @@
 
 import { useEffect } from "react";
 import { useAppDispatch } from "@/redux/hook";
-import { fetchProfile } from "@/redux/slices/authSlice";
+import { useSelector } from "react-redux";
+import { fetchProfile, selectProfile } from "@/redux/slices/authSlice";
 
 export default function ProfileHydrator() {
   const dispatch = useAppDispatch();
+  const profile = useSelector(selectProfile);
 
   useEffect(() => {
-    dispatch(fetchProfile());
-  }, [dispatch]);
+    if (!profile) {
+      dispatch(fetchProfile());
+    }
+  }, [dispatch, profile]);
 
   return null;
 }

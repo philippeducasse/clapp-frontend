@@ -63,6 +63,7 @@ export function DataTable<TData, TValue>({
     pageIndex: 0,
     pageSize: 25,
   });
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   const handlePaginationChange: OnChangeFn<PaginationState> = useCallback((updater) => {
     setPagination((prev) => {
@@ -71,9 +72,19 @@ export function DataTable<TData, TValue>({
     });
   }, []);
 
+  // Initialize state with data on mount
+  useEffect(() => {
+    if (data.length > 0 && onDataFetched && !hasInitialized) {
+      onDataFetched({
+        results: data,
+        count: totalCount || data.length,
+      } as PaginatedResponse<TData>);
+    }
+  }, [data, totalCount, onDataFetched, hasInitialized]);
+
   // Fetch data when pagination, filters, or search changes
   useEffect(() => {
-    if (fetchData) {
+    if (fetchData && (data.length === 0 || hasInitialized)) {
       const offset = pagination.pageIndex * pagination.pageSize;
 
       // Convert columnFilters to a simple object for the API
@@ -89,7 +100,8 @@ export function DataTable<TData, TValue>({
         filters: Object.keys(filterParams).length > 0 ? filterParams : undefined,
       }).then(onDataFetched);
     }
-  }, [pagination, columnFilters, searchBarFilter, fetchData, onDataFetched]);
+    setHasInitialized(true);
+  }, [pagination, columnFilters, searchBarFilter, fetchData, onDataFetched, data.length, hasInitialized]);
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
