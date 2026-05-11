@@ -36,9 +36,7 @@ const authSlice = createSlice({
     },
     updatePerformance(state, action: PayloadAction<Performance>) {
       if (state.profile) {
-        const index = state.profile.performances.findIndex(
-          (p) => p.id === action.payload.id
-        );
+        const index = state.profile.performances.findIndex((p) => p.id === action.payload.id);
         if (index !== -1) {
           state.profile.performances[index] = action.payload;
         }
@@ -54,6 +52,8 @@ const authSlice = createSlice({
 
 export const { setProfile, updateProfile, addPerformance, updatePerformance } = authSlice.actions;
 
-export const selectProfile = (state: RootState) => state.profile.profile;
+export const selectProfile = (state: RootState) => {
+  return state.profile.profile;
+};
 
 export default authSlice.reducer;
