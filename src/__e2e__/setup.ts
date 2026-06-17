@@ -48,7 +48,6 @@ export const waitForBackend = async (maxAttempts = 30, delayMs = 1000) => {
       });
       // 401 is ok - means backend is responding but not authenticated
       if (response.ok || response.status === 401 || response.status === 403) {
-        console.log("✓ Backend is ready");
         return true;
       }
     } catch {
@@ -83,7 +82,6 @@ const handleCookies = (response: Response) => {
       // Remove existing sessionid if present, then add new one
       globalCookies = globalCookies.filter((c) => !c.startsWith("sessionid="));
       globalCookies.push(`sessionid=${sessionMatch[1]}`);
-      console.log("✓ Session cookie stored");
     }
 
     // Extract CSRF token from Set-Cookie header
@@ -93,17 +91,14 @@ const handleCookies = (response: Response) => {
       // Remove existing csrftoken if present, then add new one
       globalCookies = globalCookies.filter((c) => !c.startsWith("csrftoken="));
       globalCookies.push(`csrftoken=${csrfMatch[1]}`);
-      console.log("✓ CSRF token stored");
     }
   });
 };
 
 // Helper to login and get session cookie
 export const loginTestUser = async (credentials = TEST_USER) => {
-  console.log(`\nLogging in as ${credentials.email}...`);
 
   // First, make a GET request to establish CSRF cookie (Django requirement)
-  console.log("  → Requesting CSRF token...");
   const getResponse = await fetch(`${API_BASE}/profiles/me`, {
     method: "GET",
     headers: {
@@ -113,8 +108,6 @@ export const loginTestUser = async (credentials = TEST_USER) => {
 
   // Extract CSRF cookie from initial request
   handleCookies(getResponse);
-  console.log(`  → CSRF Token: ${csrfToken ? csrfToken.substring(0, 10) + "..." : "NOT SET"}`);
-  console.log(`  → Cookies: [${globalCookies.join(", ")}]`);
 
   // Now login with the CSRF cookie
   const response = await fetch(`${API_BASE}/profiles/login/`, {
@@ -143,7 +136,6 @@ export const loginTestUser = async (credentials = TEST_USER) => {
 
   const data = await response.json();
   const converted = transformKeysToCamelCase(data);
-  console.log(`✓ Successfully logged in as ${converted.email}`);
   return converted;
 };
 
@@ -175,7 +167,6 @@ const convertFormDataToSnakeCase = (formData: FormData): FormData => {
   formData.forEach((value, key) => {
     // Simple camelCase to snake_case conversion for FormData keys
     const snakeKey = key.replace(/([A-Z])/g, "_$1").toLowerCase();
-    console.log(`  FormData: ${key} → ${snakeKey} = ${value}`);
     newFormData.append(snakeKey, value);
   });
   return newFormData;
@@ -185,9 +176,7 @@ const convertFormDataToSnakeCase = (formData: FormData): FormData => {
 export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
   const headers = new Headers(options.headers || {});
 
-  console.log(`  → ${options.method} ${url}`);
   if (options.headers) {
-    console.log(`  Headers:`, options.headers);
   }
 
   // Add cookies for authentication
@@ -212,9 +201,7 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
     // Convert JSON body
     try {
       const parsed = JSON.parse(body);
-      console.log(`  JSON body before conversion:`, parsed);
       const converted = transformKeysToSnakeCase(parsed);
-      console.log(`  JSON body after conversion:`, converted);
       body = JSON.stringify(converted);
     } catch {
       // If not JSON, leave as is
@@ -275,7 +262,6 @@ export const cleanupTestData = async () => {
     return;
   }
 
-  console.log(`\n🧹 Cleaning up ${createdEntities.length} test entities...`);
 
   // Delete in reverse order (LIFO - Last In First Out)
   for (let i = createdEntities.length - 1; i >= 0; i--) {
@@ -298,14 +284,12 @@ export const cleanupTestData = async () => {
 
     const success = await deleteEntity(endpoint, id);
     if (success) {
-      console.log(`  ✓ Deleted ${type} #${id}`);
     } else {
       console.warn(`  ✗ Failed to delete ${type} #${id}`);
     }
   }
 
   createdEntities.length = 0;
-  console.log("✓ Cleanup complete\n");
 };
 
 // Get current cookies for debugging

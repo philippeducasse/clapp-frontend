@@ -52,7 +52,6 @@ describe("E2E: Residencies and Applications", () => {
     const listData = await listResponse.json();
 
     if (listData.results.length === 0) {
-      console.log("Skipping: No residencies available");
       return;
     }
 
@@ -97,7 +96,6 @@ describe("E2E: Residencies and Applications", () => {
     const listData = await listResponse.json();
 
     if (listData.results.length === 0) {
-      console.log("Skipping: No residencies available");
       return;
     }
 
@@ -120,7 +118,6 @@ describe("E2E: Residencies and Applications", () => {
     const listData = await listResponse.json();
 
     if (listData.results.length === 0) {
-      console.log("Skipping: No residencies available");
       return;
     }
 
@@ -157,7 +154,6 @@ describe("E2E: Residencies and Applications", () => {
     const listData = await listResponse.json();
 
     if (listData.results.length === 0) {
-      console.log("Skipping: No residencies available");
       return;
     }
 
@@ -216,7 +212,6 @@ describe("E2E: Residencies and Applications", () => {
     const listData = await listResponse.json();
 
     if (listData.results.length === 0) {
-      console.log("Skipping: No applications available");
       return;
     }
 
@@ -240,7 +235,6 @@ describe("E2E: Residencies and Applications", () => {
     const listData = await listResponse.json();
 
     if (listData.results.length === 0) {
-      console.log("Skipping: No applications available");
       return;
     }
 

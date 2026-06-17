@@ -56,7 +56,6 @@ describe("E2E: Profiles and Performances", () => {
 
       expect(updateResponse.ok).toBe(true);
       const updated = await updateResponse.json();
-      console.log(JSON.stringify(updated, null, 2));
       expect(updated.firstName).toBe("UpdatedName");
       expect(updated.location).toBe("Berlin, Germany");
     });
@@ -141,7 +140,6 @@ describe("E2E: Profiles and Performances", () => {
         expect(created.performanceTitle).toBe("E2E Test Performance");
         trackEntity("performance", created.id);
       } else {
-        console.log(`Skipping: API returned ${response.status}`);
       }
     });
 
@@ -167,7 +165,6 @@ describe("E2E: Profiles and Performances", () => {
         expect(created.performanceTitle).toBe("E2E Performance with Dossier");
         trackEntity("performance", created.id);
       } else {
-        console.log(`Skipping: API returned ${response.status}`);
       }
     });
 
@@ -178,13 +175,11 @@ describe("E2E: Profiles and Performances", () => {
       });
 
       if (!listResponse.ok) {
-        console.log("Skipping: Cannot fetch performances");
         return;
       }
 
       const performances = await listResponse.json();
       if (performances.length === 0) {
-        console.log("Skipping: No performances available");
         return;
       }
 
@@ -214,7 +209,6 @@ describe("E2E: Profiles and Performances", () => {
       });
 
       if (!createResponse.ok) {
-        console.log("Skipping: Cannot create performance");
         return;
       }
 

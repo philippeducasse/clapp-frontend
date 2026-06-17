@@ -13,7 +13,6 @@ const getFullUrl = (url: string): string => {
     typeof window === "undefined"
       ? process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000"
       : "";
-  // console.log("BASE URL: ", baseUrl, "PUBLIC_BACKEND_URL ", process.env.NEXT_PUBLIC_BACKEND_URL);
   return `${baseUrl}${url}`;
 };
 
@@ -77,7 +76,6 @@ const handleResponse = async <T>(
     json = await res.json();
   } catch {
     json = {};
-    console.info("No returned JSON");
   }
 
   if (successMessage) {

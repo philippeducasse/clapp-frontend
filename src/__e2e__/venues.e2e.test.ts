@@ -52,7 +52,6 @@ describe("E2E: Venues and Applications", () => {
     const listData = await listResponse.json();
 
     if (listData.results.length === 0) {
-      console.log("Skipping: No venues available");
       return;
     }
 
@@ -97,7 +96,6 @@ describe("E2E: Venues and Applications", () => {
     const listData = await listResponse.json();
 
     if (listData.results.length === 0) {
-      console.log("Skipping: No venues available");
       return;
     }
 
@@ -134,7 +132,6 @@ describe("E2E: Venues and Applications", () => {
     const listData = await listResponse.json();
 
     if (listData.results.length === 0) {
-      console.log("Skipping: No venues available");
       return;
     }
 
@@ -193,7 +190,6 @@ describe("E2E: Venues and Applications", () => {
     const listData = await listResponse.json();
 
     if (listData.results.length === 0) {
-      console.log("Skipping: No applications available");
       return;
     }
 
@@ -217,7 +213,6 @@ describe("E2E: Venues and Applications", () => {
     const listData = await listResponse.json();
 
     if (listData.results.length === 0) {
-      console.log("Skipping: No applications available");
       return;
     }
 
