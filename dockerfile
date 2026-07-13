@@ -6,14 +6,21 @@ RUN apk add --no-cache libc6-compat
 # sets relative path, all subsequennt path references are based off this
 WORKDIR ${APP_HOME}
 
-# copy package.json into 
-COPY package.json package-lock.json ./
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@10 --activate
+
+# copy package.json into
+COPY package.json pnpm-lock.yaml ./
 # clean install
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 
 FROM base AS build
 ARG NEXT_PUBLIC_BACKEND_URL
 WORKDIR ${APP_HOME}
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@10 --activate
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
@@ -22,7 +29,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 ENV NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
 
-RUN npm run build 
+RUN pnpm run build 
 
 FROM base AS run
 WORKDIR ${APP_HOME}
