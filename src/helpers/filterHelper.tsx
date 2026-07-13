@@ -9,14 +9,14 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Column } from "@tanstack/table-core";
+import { Column } from "@tanstack/react-table";
 import { Switch } from "@/components/ui/switch";
 import { MultiSelect } from "@/components/ui/multi-select";
 
 export const getFilterInput = <TData,>(
   filterConfig: FilterConfig,
   value: string | string[] | boolean,
-  column: Column<TData>
+  column: Column<TData>,
 ) => {
   const renderInput = () => {
     switch (filterConfig.type) {
