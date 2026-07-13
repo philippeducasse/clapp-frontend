@@ -24,7 +24,6 @@ const EditPreferencesPage = () => {
   const dispatch: AppDispatch = useDispatch();
   const profile = useSelector((state: RootState) => selectProfile(state));
   const [isLoading, setIsLoading] = useState(false);
-  const [initialDataLoaded, setInitialDataLoaded] = useState(false);
 
   const formFields = useMemo(() => getPreferencesFormFields(), []);
   const formSchema = useMemo(() => createZodFormSchema(formFields), [formFields]);
@@ -41,21 +40,14 @@ const EditPreferencesPage = () => {
         try {
           const fetchedProfile = await profileApiService.get();
           dispatch(updateProfile(fetchedProfile));
-          setInitialDataLoaded(true);
+          form.reset(sanitizeFormData(fetchedProfile));
         } catch (error) {
           console.error("Error fetching profile:", error);
         }
       }
     };
     fetchProfile();
-  }, [profile, dispatch]);
-
-  useEffect(() => {
-    if (profile && initialDataLoaded) {
-      form.reset(sanitizeFormData(profile));
-      setInitialDataLoaded(false);
-    }
-  }, [profile, form, initialDataLoaded]);
+  }, [profile, dispatch, form]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);

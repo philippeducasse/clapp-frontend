@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { EmailTemplate } from "@/interfaces/entities/Profile";
 import {
   createZodFormSchema,
@@ -37,7 +37,7 @@ const EmailTemplateForm = ({ action }: EmailTemplateFormProps) => {
   const formFields = getEmailTemplateFormFields();
   const formSchema = createZodFormSchema(formFields);
   const [isLoading, setIsLoading] = useState(false);
-  const [formInitialized, setFormInitialized] = useState(false);
+  const formInitializedRef = useRef(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,11 +46,11 @@ const EmailTemplateForm = ({ action }: EmailTemplateFormProps) => {
   });
 
   useEffect(() => {
-    if (template && action === Action.EDIT && !formInitialized) {
+    if (template && action === Action.EDIT && !formInitializedRef.current) {
       form.reset(sanitizeFormData(template, formFields));
-      setFormInitialized(true);
+      formInitializedRef.current = true;
     }
-  }, [template, action, formInitialized, form, formFields]);
+  }, [template, action, form, formFields]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (!profile) return;

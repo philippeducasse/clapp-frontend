@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { AlarmClock, CheckCheck, Plus, Trash2 } from "lucide-react";
 import { Reminder } from "@/interfaces/entities/Reminder";
@@ -14,6 +14,7 @@ const ProfileRemindersCard = () => {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [openReminderModal, setOpenReminderModal] = useState(false);
+  const hasFetchedRef = useRef(false);
 
   const fetchReminders = async () => {
     try {
@@ -27,7 +28,10 @@ const ProfileRemindersCard = () => {
   };
 
   useEffect(() => {
-    fetchReminders();
+    if (!hasFetchedRef.current) {
+      fetchReminders();
+      hasFetchedRef.current = true;
+    }
   }, []);
 
   const handleDelete = async (reminderId: number) => {

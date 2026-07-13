@@ -20,20 +20,19 @@ const RemindersCard = ({ organisationType, entityId }: RemindersCardProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [openReminderModal, setOpenReminderModal] = useState(false);
 
-  const fetchReminders = async () => {
-    try {
-      const data = await reminderApiService.getRemindersForEntity(organisationType, entityId);
-      setReminders(data);
-    } catch (error) {
-      console.error("Failed to fetch reminders:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchReminders = async () => {
+      try {
+        const data = await reminderApiService.getRemindersForEntity(organisationType, entityId);
+        setReminders(data);
+      } catch (error) {
+        console.error("Failed to fetch reminders:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchReminders();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organisationType, entityId]);
 
   const handleDelete = async (reminderId: number) => {
