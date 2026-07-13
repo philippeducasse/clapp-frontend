@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Dossier, Performance } from "@/interfaces/entities/Performance";
 import {
   createZodFormSchema,
@@ -36,7 +36,7 @@ const PerformanceForm = ({ action }: PerformanceFormProps) => {
   const formFields = getPerformanceFormFields();
   const formSchema = createZodFormSchema(formFields);
   const [isLoading, setIsLoading] = useState(false);
-  const [formInitialized, setFormInitialized] = useState(false);
+  const formInitializedRef = useRef(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,11 +45,11 @@ const PerformanceForm = ({ action }: PerformanceFormProps) => {
   });
 
   useEffect(() => {
-    if (performance && action === Action.EDIT && !formInitialized) {
+    if (performance && action === Action.EDIT && !formInitializedRef.current) {
       form.reset(sanitizeFormData(performance, formFields));
-      setFormInitialized(true);
+      formInitializedRef.current = true;
     }
-  }, [performance, action, formInitialized, form, formFields]);
+  }, [performance, action, form, formFields]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);

@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Application, ApplicationCreate } from "@/interfaces/entities/Application";
 import { createZodFormSchema, sanitizeFormData, getInitialValues } from "@/helpers/formHelper";
 import { applicationApiService } from "@/api/applicationApiService";
@@ -33,7 +33,7 @@ const ManualApplicationForm = ({ action }: ManualApplicationFormProps) => {
   const formFields = getManualApplicationFormFields(performances);
   const formSchema = createZodFormSchema(formFields);
   const [isLoading, setIsLoading] = useState(false);
-  const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+  const initialDataLoadedRef = useRef(false);
   useEffect(() => {
     if (action !== Action.CREATE && !application) {
       refreshApplication(applicationId, dispatch);
@@ -47,7 +47,7 @@ const ManualApplicationForm = ({ action }: ManualApplicationFormProps) => {
   });
 
   useEffect(() => {
-    if (application && !initialDataLoaded) {
+    if (application && !initialDataLoadedRef.current) {
       const formData = {
         ...application,
         organisation:
@@ -58,9 +58,9 @@ const ManualApplicationForm = ({ action }: ManualApplicationFormProps) => {
       };
 
       form.reset(sanitizeFormData(formData as unknown as Record<string, unknown>));
-      setInitialDataLoaded(true);
+      initialDataLoadedRef.current = true;
     }
-  }, [application, form, initialDataLoaded]);
+  }, [application, form]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
