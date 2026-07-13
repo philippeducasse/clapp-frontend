@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   createZodFormSchema,
   sanitizeFormData,
@@ -52,7 +52,7 @@ function ContactsForm<T extends { id?: number; contacts?: OrganisationContact[] 
   const formFields = getContactFormFields(action === Action.EDIT);
   const formSchema = createZodFormSchema(formFields);
   const [isLoading, setIsLoading] = useState(false);
-  const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+  const hasLoadedRef = useRef(false);
 
   const contactToEdit =
     action === Action.EDIT && entity?.contacts?.[contactIndex]
@@ -70,19 +70,19 @@ function ContactsForm<T extends { id?: number; contacts?: OrganisationContact[] 
 
   // Fetch entity data if not available
   useEffect(() => {
-    if (!entity && entityId && entityId !== -1) {
+    if (!entity && entityId && entityId !== -1 && !hasLoadedRef.current) {
+      hasLoadedRef.current = true;
       refreshEntity(entityId, dispatch);
-      setInitialDataLoaded(true);
     }
   }, [entityId, entity, dispatch, refreshEntity]);
 
-  // Reset form when entity data changes (but only once)
+  // Reset form when entity loads
   useEffect(() => {
-    if (entity && initialDataLoaded) {
+    if (entity && hasLoadedRef.current) {
       form.reset(sanitizeFormData(entity as unknown as Record<string, unknown>));
-      setInitialDataLoaded(false);
+      hasLoadedRef.current = false;
     }
-  }, [entity, form, initialDataLoaded]);
+  }, [entity, form]);
 
   // Reset form when contact data is loaded (edit mode only)
   useEffect(() => {

@@ -52,14 +52,15 @@ const ControlledSearch = ({ field, organisationType }: ControlledSearchProps) =>
     return () => clearTimeout(timeoutId);
   }, [searchQuery, organisationType]);
 
+  const prevOrgTypeRef = useRef(organisationType);
   useEffect(() => {
-    if (searchQuery && !isSelected) {
+    if (prevOrgTypeRef.current !== organisationType && searchQuery && !isSelected) {
       setSearchQuery("");
       field.onChange("");
       setSearchResults([]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [organisationType]);
+    prevOrgTypeRef.current = organisationType;
+  }, [organisationType, searchQuery, isSelected, field]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
