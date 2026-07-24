@@ -20,6 +20,8 @@ A personal assistant application for managing careers in the performance arts. B
 | Tables | TanStack React Table |
 | Testing | Vitest |
 | Error tracking | Sentry |
+| AI | MistralApi |
+
 
 ## Getting Started
 
